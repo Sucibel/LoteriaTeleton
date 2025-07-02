@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import CardGrid from './CardGrid';
 import styles from './Loteria.module.css';
+import { FaPlay, FaRedo } from "react-icons/fa";
+import FooterBajo from './FooterBajo'
+
 
 const LoteriaGame = () => {
   const [selectedCards, setSelectedCards] = useState(() => {
@@ -34,7 +37,7 @@ const LoteriaGame = () => {
     const fetchImages = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://suciweb-page.glitch.me/fotos');
+        const response = await fetch('https://teletonapi.glitch.me/imagenesTeleton');
 
         if (!response.ok) {
           throw new Error('Error al cargar las imágenes');
@@ -81,7 +84,7 @@ const LoteriaGame = () => {
     if (currentSelectedCard) {
       const timeout = setTimeout(() => {
         setCurrentSelectedCard(null);
-      }, 6000); // 6 segundos
+      }, 4000); // 6 segundos
 
       return () => clearTimeout(timeout);
     }
@@ -99,7 +102,7 @@ const LoteriaGame = () => {
       setSelectedCards(prev => [...prev, cardId]);
       setCurrentSelectedCard(null);
       setIsAnimating(false);
-    }, 6000);
+    }, 4000);
   };
 
   const startGame = () => {
@@ -127,74 +130,81 @@ const LoteriaGame = () => {
   }
 
   return (
-    <div className={styles.loteriaContainer}>
-      {/* Header */}
-      <div className={styles.header}>
-        <img 
-          src="./src/assets/images/logo.png" 
-          alt="Logo Lotería" 
-          className={styles.logo}
-        />
-        <h1 className={styles.title}>LOTERÍA 2025</h1>
-        {error && (
-          <div className={styles.errorMessage}>
-            {error}
-          </div>
-        )}
-      </div>
-
-      {/* Controles */}
-      <div className={styles.controls}>
-        {!gameStarted ? (
-          <button onClick={startGame} className={styles.startButton}>
-            Iniciar Lotería
-          </button>
-        ) : (
-          <div className={styles.gameControls}>
-            <button onClick={resetGame} className={styles.resetButton}>
-              Reiniciar
-            </button>
-            <div className={styles.counter}>
-              Cartas seleccionadas: {selectedCards.length}/100
+    <div>
+      <div className={styles.loteriaContainer}>
+        {/* Header */}
+        <div className={styles.header}>
+          <img
+            // src="https://res.cloudinary.com/dvsiltcrs/image/upload/v1751239161/logoTeleton_emx96j.png"
+            src='https://res.cloudinary.com/dvsiltcrs/image/upload/v1751239555/logo_zfzln1.png'
+            alt="Logo Lotería"
+            className={styles.logo}
+          />
+          {/* <h1 className={styles.title}>LOTERÍA 2025</h1> */}
+          {error && (
+            <div className={styles.errorMessage}>
+              {error}
             </div>
-            {isAnimating && (
-              <div className={styles.timer}>
-                <div className={styles.timerBar}></div>
-                <span>Mostrando carta...</span>
-              </div>
-            )}
+          )}
+        </div>
+
+        {/* Controles */}
+        <div className={styles.controls}>
+          {!gameStarted ? (
+            <button onClick={startGame} className={styles.startButton}>
+              <FaPlay />
+            </button>
+          ) : (
+            <div className={styles.gameControls}>
+              <button onClick={resetGame} className={styles.resetButton}>
+                <FaRedo />
+              </button>
+
+              {/* <div className={styles.counter}>
+              Cartas seleccionadas: {selectedCards.length}/100
+            </div> */}
+
+              {isAnimating && (
+                <div className={styles.timer}>
+                  <div className={styles.timerBar}></div>
+                  <span>Mostrando carta...</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Cartas */}
+        <CardGrid
+          cards={cards}
+          selectedCards={selectedCards}
+          currentSelectedCard={currentSelectedCard}
+          isAnimating={isAnimating}
+          gameStarted={gameStarted}
+          onCardClick={selectCard}
+        />
+
+        {/* Carta ampliada */}
+        {currentSelectedCard && (
+          <div className={styles.expandedCardOverlay}>
+            <div className={styles.expandedCard}>
+              <img
+                src={cards.find(card => card.id === currentSelectedCard)?.image}
+                alt={`Carta ${currentSelectedCard}`}
+                className={styles.expandedCardImage}
+                onError={(e) => {
+                  e.target.src = `./src/assets/cards/card-1.jpg`;
+                }}
+              />
+              {/* <h2 className={styles.expandedCardTitle}>
+              {cards.find(card => card.id === currentSelectedCard)?.name}
+            </h2> */}
+            </div>
           </div>
         )}
+
       </div>
-
-      {/* Cartas */}
-      <CardGrid 
-        cards={cards}
-        selectedCards={selectedCards}
-        currentSelectedCard={currentSelectedCard}
-        isAnimating={isAnimating}
-        gameStarted={gameStarted}
-        onCardClick={selectCard}
-      />
-
-      {/* Carta ampliada */}
-      {currentSelectedCard && (
-        <div className={styles.expandedCardOverlay}>
-          <div className={styles.expandedCard}>
-            <img 
-              src={cards.find(card => card.id === currentSelectedCard)?.image}
-              alt={`Carta ${currentSelectedCard}`}
-              className={styles.expandedCardImage}
-              onError={(e) => {
-                e.target.src = `./src/assets/cards/card-1.jpg`;
-              }}
-            />
-            <h2 className={styles.expandedCardTitle}>
-              {cards.find(card => card.id === currentSelectedCard)?.name}
-            </h2>
-          </div>
-        </div>
-      )}
+      <FooterBajo />
     </div>
   );
 };
