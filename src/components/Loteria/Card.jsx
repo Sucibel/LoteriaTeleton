@@ -16,30 +16,29 @@ const Card = ({
 }) => {
   const getCardClassName = () => {
     let className = styles.card;
-
+    
+    // CAMBIO PRINCIPAL: Ahora las cartas NO seleccionadas están borrosas por defecto
+    if (!isSelected && gameStarted && !isCurrentSelected && !isAnimating) {
+      className += ` ${styles.cardDarkened}`;
+    }
+    
+    // Las cartas seleccionadas se ven claras y destacadas
     if (isSelected) {
       className += ` ${styles.cardSelected}`;
     }
-
-    if (isDarkened && !isAnimating) {
-      className += ` ${styles.cardDarkened}`;
-    }
-
+    
     if (isCurrentSelected) {
       className += ` ${styles.cardHighlighted}`;
     }
-
+    
     if (isAnimating && !isCurrentSelected) {
       className += ` ${styles.cardDimmedDuringAnimation}`;
-    } else if (!isAnimating && isDarkened) {
-      className += ` ${styles.cardDarkened}`;
     }
-
-
-    if (gameStarted && !isSelected && !isAnimating) {
+    
+    if (gameStarted && !isAnimating) {
       className += ` ${styles.cardClickable}`;
     }
-
+    
     return className;
   };
 
@@ -62,7 +61,6 @@ const Card = ({
         {/* <div className={styles.cardNumber}>{card.id}</div> */}
         {isSelected && !isCurrentSelected && (
           <div className={styles.cardOverlay}>
-            <span className={styles.checkmark}>✓</span>
           </div>
         )}
       </div>

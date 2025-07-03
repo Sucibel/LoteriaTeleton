@@ -316,7 +316,6 @@
 
 .cardDimmedDuringAnimation {
   opacity: 0.3;
-  
   transition: all 0.5s ease;
 }
 
@@ -343,16 +342,9 @@
   justify-content: center;
   opacity: 0;
   animation: fadeInOverlay 0.5s ease-in-out forwards;
-  backdrop-filter: blur(2px);
 }
 
-.checkmark {
-  color: #FBBF24;
-  font-size: 1rem;
-  font-weight: bold;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
-  animation: checkmarkBounce 0.6s ease-out;
-}
+
 
 /* Carta expandida con estilo Teletón */
 .expandedCardOverlay {
